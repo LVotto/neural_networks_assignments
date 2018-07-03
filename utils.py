@@ -8,6 +8,7 @@ Created on Tue Apr  3 17:36:03 2018
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import sympy
 
 def step(x):
     return 0 if x < 0 else 1
@@ -73,7 +74,29 @@ def mean_square_error(d, w, x):
     result = 0
     p = len(d)
     for k in range(p):
-        result += pow(d[k] - np.dot(w, x[k]), 2)
+        result += pow(d[k] - np.dot(w, x[k]), 2) / 2
     return result / p
+
+def tanh_prime(x):
+    return 1 - np.tanh(x) ** 2
+
+def logistic(x):
+    return 1 / (1 + np.exp(-x))
+
+def logistic_prime(x):
+    return logistic(x) * (1 - logistic(x))
     
-    
+def diff(function):
+    if function == np.tanh:
+        return tanh_prime
+    if function == logistic:
+        return logistic_prime
+    else:
+        raise NotImplementedError('''Did not implement derivatives for now. 
+                                         Use default activation function.''')
+        
+def sym_step(val):
+    return 0 if val < 1 / 2 else 1
+
+def gauss(x, avg, vrc):
+    return np.exp(-((x - avg) ** 2) / (2 * vrc))
